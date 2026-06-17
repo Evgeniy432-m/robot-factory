@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>АИАЗАВОД — Завод интеллектуальных роботов</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e1a;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* ===== ШАПКА ===== */
+        header {
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b3a5c 100%);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #00d4ff;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: #00d4ff;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #b0c4de;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            color: #00d4ff;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #00d4ff, #0077be);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .nav-btn.logout-btn {
+            background: linear-gradient(135deg, #ff6b6b, #c0392b);
+        }
+
+        .nav-btn.logout-btn:hover {
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* ===== ГЛАВНЫЙ ЭКРАН (не авторизован) ===== */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: radial-gradient(ellipse at center, #1b3a5c 0%, #0a0e1a 70%);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            background: linear-gradient(135deg, #00d4ff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #b0c4de;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        .hero-btn {
+            background: linear-gradient(135deg, #00d4ff, #a855f7);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        /* ===== КАРТОЧКИ ПРОДУКЦИИ ===== */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .product-card {
+            background: linear-gradient(145deg, #111c2e, #0d1628);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .product-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .product-card h3 {
+            color: #00d4ff;
+            margin-bottom: 8px;
+        }
+
+        .product-card p {
+            color: #8899bb;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .product-price {
+            color: #a855f7;
+            font-weight: 700;
+            font-size: 20px;
+            margin-top: 12px;
+        }
+
+        /* ===== ЛИЧНЫЙ КАБИНЕТ ===== */
+        .profile-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .profile-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .profile-card {
+            background: linear-gradient(145deg, #111c2e, #0d1628);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .profile-card h3 {
+            color: #00d4ff;
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #00d4ff, #a855f7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            margin: 0 auto 16px;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .profile-name {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .profile-role {
+            text-align: center;
+            color: #8899bb;
+            font-size: 14px;
+        }
+
+        .profile-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .profile-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .profile-info-item .label {
+            color: #8899bb;
+        }
+
+        .profile-info-item .value {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .profile-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 14px;
+            min-width: 120px;
+        }
+
+        .profile-actions button:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #0077be);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #c0392b);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-secondary {
+            background: #1b3a5c;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 5px 20px rgba(27, 58, 92, 0.5);
+        }
+
+        /* ===== ФОРМЫ ВХОДА/РЕГИСТРАЦИИ ===== */
+        .auth-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-overlay.active {
+            display: flex;
+        }
+
+        .auth-modal {
+            background: linear-gradient(145deg, #111c2e, #0d1628);
+            padding: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .auth-modal h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #00d4ff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-modal .form-group {
+            margin-bottom: 16px;
+        }
+
+        .auth-modal label {
+            display: block;
+            font-size: 14px;
+            color: #b0c4de;
+            margin-bottom: 6px;
+        }
+
+        .auth-modal input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0a0e1a;
+            border: 2px solid #1b3a5c;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .auth-modal input:focus {
+            outline: none;
+            border-color: #00d4ff;
+        }
+
+        .auth-modal .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00d4ff, #a855f7);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .auth-modal .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .auth-modal .toggle-link {
+            text-align: center;
+            margin-top: 16px;
+            color: #8899bb;
+            font-size: 14px;
+        }
+
+        .auth-modal .toggle-link a {
+            color: #00d4ff;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .auth-modal .toggle-link a:hover {
+            color: #a855f7;
+        }
+
+        .auth-modal .close-btn {
+            position: relative;
+            float: right;
+            background: none;
+            border: none;
+            color: #8899bb;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .auth-modal .close-btn:hover {
+            color: #ff6b6b;
+        }
+
+        .auth-message {
+            margin-top: 16px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        .auth-message.success {
+            display: block;
+            background: rgba(0, 212, 255, 0.15);
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .auth-message.error {
+            display: block;
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+        }
+
+        /* ===== ФУТЕР ===== */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #556688;
+            font-size: 14px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 40px;
+        }
+
+        footer span {
+            color: #00d4ff;
+        }
+
+        /* ===== АДАПТИВНОСТЬ ===== */
+        @media (max-width: 600px) {
+            header {
+                padding: 16px 20px;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            nav {
+                justify-content: center;
+                gap: 12px;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            .auth-modal {
+                padding: 24px 20px;
+                margin: 0 16px;
+            }
+
+            .profile-actions button {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== ШАПКА ===== -->
+<header>
+    <div class="logo">
+        <span class="logo-icon">⚡</span>
+        АИА<span>ЗАВОД</span>
+    </div>
+    <nav>
+        <a href="#" id="navHome">Главная</a>
+        <a href="#" id="navProducts">Продукция</a>
+        <a href="#" id="navAbout">О нас</a>
+        <a href="#" id="navContacts">Контакты</a>
+        <button class="nav-btn" id="navLoginBtn">Войти</button>
+        <button class="nav-btn logout-btn hidden" id="navLogoutBtn">Выйти</button>
+    </nav>
+</header>
+
+<!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+<div class="container">
+
+    <!-- ===== ГЛАВНАЯ (не авторизован) ===== -->
+    <div id="mainContent">
+        <div class="hero">
+            <h1>⚡ Будущее уже здесь</h1>
+            <p>
+                АИАЗАВОД — ведущий производитель интеллектуальных роботов 
+                с искусственным интеллектом. Мы создаём технологии, которые 
+                меняют мир.
+            </p>
+            <button class="hero-btn" id="heroAuthBtn">Присоединиться</button>
+        </div>
+
+        <h2 style="color: #00d4ff; margin-bottom: 20px; text-align: center;">🤖 Наши разработки</h2>
+        <div class="products">
+            <div class="product-card">
+                <div class="product-icon">🧠</div>
+                <h3>AI-Ассистент Pro</h3>
+                <p>Интеллектуальный помощник для бизнеса и дома</p>
+                <div class="product-price">от 499 000 ₽</div>
+            </div>
+            <div class="product-card">
+                <div class="product-icon">🦾</div>
+                <h3>Робот-Строитель X1</h3>
+                <p>Автономный робот для строительных работ</p>
+                <div class="product-price">от 1 299 000 ₽</div>
+            </div>
+            <div class="product-card">
+                <div class="product-icon">🚀</div>
+                <h3>Дрон-Инспектор V3</h3>
+                <p>Беспилотник с AI для мониторинга территорий</p>
+                <div class="product-price">от 899 000 ₽</div>
+            </div>
+            <div class="product-card">
+                <div class="product-icon">💊</div>
+                <h3>Медицинский Робот</h3>
+                <p>Помощник в диагностике и реабилитации</p>
+                <div class="product-price">от 2 499 000 ₽</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ЛИЧНЫЙ КАБИНЕТ ===== -->
+    <div class="profile-section" id="profileSection">
+        <h2 style="color: #00d4ff; margin-bottom: 24px;">👤 Личный кабинет</h2>
+        <div class="profile-grid">
+            <div class="profile-card">
+                <div class="profile-avatar" id="profileAvatar">👤</div>
+                <div class="profile-name" id="profileName">Пользователь</div>
+                <div class="profile-role" id="profileRole">Клиент</div>
+                <div class="profile-actions">
+                    <button class="btn-primary" id="profileEditBtn">✏️ Редактировать</button>
+                    <button class="btn-danger" id="profileLogoutBtn">🚪 Выйти</button>
+                </div>
+            </div>
+            <div class="profile-card">
+                <h3>📋 Информация</h3>
+                <div class="profile-info-item">
+                    <span class="label">ID пользователя</span>
+                    <span class="value" id="profileUserId">-</span>
+                </div>
+                <div class="profile-info-item">
+                    <span class="label">Имя</span>
+                    <span class="value" id="profileUserUsername">-</span>
+                </div>
+                <div class="profile-info-item">
+                    <span class="label">Email</span>
+                    <span class="value" id="profileUserEmail">-</span>
+                </div>
+                <div class="profile-info-item">
+                    <span class="label">Дата регистрации</span>
+                    <span class="value" id="profileUserDate">-</span>
+                </div>
+                <div class="profile-info-item">
+                    <span class="label">Статус</span>
+                    <span class="value" style="color: #00d4ff;">✅ Активен</span>
+                </div>
+                <div class="profile-info-item">
+                    <span class="label">Заказов</span>
+                    <span class="value" id="profileOrders">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Форма редактирования -->
+        <div class="profile-card" id="editForm" style="display: none; margin-top: 24px;">
+            <h3>✏️ Редактировать профиль</h3>
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label style="color: #b0c4de;">Имя пользователя</label>
+                <input type="text" id="editUsername" style="width:100%; padding:12px; background:#0a0e1a; border:2px solid #1b3a5c; border-radius:10px; color:white; font-size:15px;" />
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label style="color: #b0c4de;">Email</label>
+                <input type="email" id="editEmail" style="width:100%; padding:12px; background:#0a0e1a; border:2px solid #1b3a5c; border-radius:10px; color:white; font-size:15px;" />
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn-primary" id="saveEditBtn" style="flex:1;">💾 Сохранить</button>
+                <button class="btn-secondary" id="cancelEditBtn" style="flex:1;">Отмена</button>
+            </div>
+            <div id="editMessage" class="auth-message"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== МОДАЛЬНОЕ ОКНО ВХОДА/РЕГИСТРАЦИИ ===== -->
+<div class="auth-overlay" id="authOverlay">
+    <div class="auth-modal">
+        <button class="close-btn" id="authCloseBtn">✕</button>
+        <h2 id="authTitle">🔐 Вход</h2>
+        <div class="form-group">
+            <label for="authUsername">Имя пользователя</label>
+            <input type="text" id="authUsername" placeholder="Введите имя" />
+        </div>
+        <div class="form-group">
+            <label for="authPassword">Пароль</label>
+            <input type="password" id="authPassword" placeholder="Введите пароль" />
+        </div>
+        <button class="auth-btn" id="authSubmitBtn">Войти</button>
+        <div class="toggle-link">
+            <span id="authToggleText">Нет аккаунта?</span>
+            <a id="authToggleLink">Зарегистрироваться</a>
+        </div>
+        <div id="authMessage" class="auth-message"></div>
+    </div>
+</div>
+
+<!-- ===== ФУТЕР ===== -->
+<footer>
+    ⚡ АИАЗАВОД — Завод интеллектуальных роботов<br />
+    © 2026 Все права защищены. Сделано с ❤️ и <span>AI</span>
+</footer>
+
+<script>
+    // ============================================
+    // ===== ХРАНИЛИЩЕ ПОЛЬЗОВАТЕЛЕЙ =====
+    // ============================================
+    let users = JSON.parse(localStorage.getItem('aia_users')) || {};
+    let currentUser = JSON.parse(sessionStorage.getItem('aia_currentUser')) || null;
+
+    // ============================================
+    // ===== DOM ЭЛЕМЕНТЫ =====
+    // ============================================
+    const authOverlay = document.getElementById('authOverlay');
+    const authTitle = document.getElementById('authTitle');
+    const authSubmitBtn = document.getElementById('authSubmitBtn');
+    const authToggleLink = document.getElementById('authToggleLink');
+    const authToggleText = document.getElementById('authToggleText');
+    const authMessage = document.getElementById('authMessage');
+    const authCloseBtn = document.getElementById('authCloseBtn');
+    const authUsername = document.getElementById('authUsername');
+    const authPassword = document.getElementById('authPassword');
+
+    const navLoginBtn = document.getElementById('navLoginBtn');
+    const navLogoutBtn = document.getElementById('navLogoutBtn');
+    const heroAuthBtn = document.getElementById('heroAuthBtn');
+
+    const mainContent = document.getElementById('mainContent');
+    const profileSection = document.getElementById('profileSection');
+
+    const profileAvatar = document.getElementById('profileAvatar');
+    const profileName = document.getElementById('profileName');
+    const profileRole = document.getElementById('profileRole');
+    const profileUserId = document.getElementById('profileUserId');
+    const profileUserUsername = document.getElementById('profileUserUsername');
+    const profileUserEmail = document.getElementById('profileUserEmail');
+    const profileUserDate = document.getElementById('profileUserDate');
+    const profileOrders = document.getElementById('profileOrders');
+
+    const profileEditBtn = document.getElementById('profileEditBtn');
+    const profileLogoutBtn = document.getElementById('profileLogoutBtn');
+    const editForm = document.getElementById('editForm');
+    const editUsername = document.getElementById('editUsername');
+    const editEmail = document.getElementById('editEmail');
+    const saveEditBtn = document.getElementById('saveEditBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const editMessage = document.getElementById('editMessage');
+
+    let isLoginMode = true;
+
+    // ============================================
+    // ===== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =====
+    // ============================================
+    function showAuthMessage(text, type) {
+        authMessage.textContent = text;
+        authMessage.className = `auth-message ${type}`;
+    }
+
+    function hideAuthMessage() {
+        authMessage.className = 'auth-message';
+        authMessage.textContent = '';
+    }
+
+    function showEditMessage(text, type) {
+        editMessage.textContent = text;
+        editMessage.className = `auth-message ${type}`;
+    }
+
+    function hideEditMessage() {
+        editMessage.className = 'auth-message';
+        editMessage.textContent = '';
+    }
+
+    function generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    }
+
+    function getInitials(name) {
+        return name.charAt(0).toUpperCase();
+    }
+
+    function formatDate(ts) {
+        return new Date(ts).toLocaleDateString('ru-RU', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    }
+
+    // ============================================
+    // ===== АВТОРИЗАЦИЯ =====
+    // ============================================
+    function updateUI() {
+        if (currentUser && users[currentUser]) {
+            mainContent.style.display = 'none';
+            profileSection.classList.add('active');
+            navLoginBtn.classList.add('hidden');
+            navLogoutBtn.classList.remove('hidden');
+            loadProfile();
+        } else {
+            mainContent.style.display = 'block';
+            profileSection.classList.remove('active');
+            navLoginBtn.classList.remove('hidden');
+            navLogoutBtn.classList.add('hidden');
+        }
+    }
+
+    function loadProfile() {
+        const user = users[currentUser];
+        if (!user) {
+            logout();
+            return;
+        }
+
+        const initial = getInitials(user.username);
+        profileAvatar.textContent = initial;
+        profileName.textContent = user.username;
+        profileRole.textContent = user.role || 'Клиент';
+        profileUserId.textContent = user.id;
+        profileUserUsername.textContent = user.username;
+        profileUserEmail.textContent = user.email;
+        profileUserDate.textContent = formatDate(user.registeredAt);
+        profileOrders.textContent = Math.floor(Math.random() * 10) + 1;
+    }
+
+    function login() {
+        const username = authUsername.value.trim();
+        const password = authPassword.value.trim();
+
+        if (!username || !password) {
+            showAuthMessage('Заполните все поля', 'error');
+            return;
+        }
+
+        const user = users[username];
+        if (!user || user.password !== password) {
+            showAuthMessage('Неверное имя или пароль', 'error');
+            return;
+        }
+
+        currentUser = username;
+        sessionStorage.setItem('aia_currentUser', username);
+        hideAuthMessage();
+        authOverlay.classList.remove('active');
+        authUsername.value = '';
+        authPassword.value = '';
+        updateUI();
+    }
+
+    function register() {
+        const username = authUsername.value.trim();
+        const password = authPassword.value.trim();
+
+        if (!username || !password) {
+            showAuthMessage('Заполните все поля', 'error');
+            return;
+        }
+
+        if (username.length < 3) {
+            showAuthMessage('Имя должно быть минимум 3 символа', 'error');
+            return;
+        }
+
+        if (password.length < 6) {
+            showAuthMessage('Пароль должен быть минимум 6 символов', 'error');
+            return;
+        }
+
+        if (users[username]) {
+            showAuthMessage('Пользователь уже существует', 'error');
+            return;
+        }
+
+        users[username] = {
+            id: generateId(),
+            username: username,
+            email: username + '@aiafactory.com',
+            password: password,
+            role: 'Клиент',
+            registeredAt: Date.now()
+        };
+
+        localStorage.setItem('aia_users', JSON.stringify(users));
+        showAuthMessage('✅ Регистрация успешна! Теперь войдите.', 'success');
+        toggleAuthMode();
+    }
+
+    function logout() {
+        currentUser = null;
+        sessionStorage.removeItem('aia_currentUser');
+        editForm.style.display = 'none';
+        hideEditMessage();
+        updateUI();
+    }
+
+    function toggleAuthMode() {
+        isLoginMode = !isLoginMode;
+        if (isLoginMode) {
+            authTitle.textContent = '🔐 Вход';
+            authSubmitBtn.textContent = 'Войти';
+            authToggleText.textContent = 'Нет аккаунта?';
+            authToggleLink.textContent = 'Зарегистрироваться';
+        } else {
+            authTitle.textContent = '📝 Регистрация';
+            authSubmitBtn.textContent = 'Зарегистрироваться';
+            authToggleText.textContent = 'Уже есть аккаунт?';
+            authToggleLink.textContent = 'Войти';
+        }
+        hideAuthMessage();
+        authUsername.value = '';
+        authPassword.value = '';
+    }
+
+    function openAuth() {
+        authOverlay.classList.add('active');
+        isLoginMode = true;
+        updateAuthUI();
+        hideAuthMessage();
+        authUsername.value = '';
+        authPassword.value = '';
+    }
+
+    function updateAuthUI() {
+        if (isLoginMode) {
+            authTitle.textContent = '🔐 Вход';
+            authSubmitBtn.textContent = 'Войти';
+            authToggleText.textContent = 'Нет аккаунта?';
+            authToggleLink.textContent = 'Зарегистрироваться';
+        } else {
+            authTitle.textContent = '📝 Регистрация';
+            authSubmitBtn.textContent = 'Зарегистрироваться';
+            authToggleText.textContent = 'Уже есть аккаунт?';
+            authToggleLink.textContent = 'Войти';
+        }
+    }
+
+    // ============================================
+    // ===== РЕДАКТИРОВАНИЕ ПРОФИЛЯ =====
+    // ============================================
+    function openEditForm() {
+        const user = users[currentUser];
+        if (!user) return;
+        editUsername.value = user.username;
+        editEmail.value = user.email;
+        editForm.style.display = 'block';
+        hideEditMessage();
+    }
+
+    function saveProfile() {
+        const newUsername = editUsername.value.trim();
+        const newEmail = editEmail.value.trim();
+
+        if (!newUsername || newUsername.length < 3) {
+            showEditMessage('Имя должно быть минимум 3 символа', 'error');
+            return;
+        }
+
+        if (!newEmail || !newEmail.includes('@')) {
+            showEditMessage('Введите корректный email', 'error');
+            return;
+        }
+
+        const user = users[currentUser];
+        if (newUsername !== currentUser && users[newUsername]) {
+            showEditMessage('Это имя уже занято', 'error');
+            return;
+        }
+
+        const oldUsername = currentUser;
+        if (newUsername !== oldUsername) {
+            users[newUsername] = { ...user, username: newUsername };
+            delete users[oldUsername];
+            currentUser = newUsername;
+            sessionStorage.setItem('aia_currentUser', newUsername);
+        }
+
+        users[currentUser].email = newEmail;
+        localStorage.setItem('aia_users', JSON.stringify(users));
+
+        showEditMessage('✅ Профиль обновлён!', 'success');
+        setTimeout(() => {
+            hideEditMessage();
+            editForm.style.display = 'none';
+            loadProfile();
+        }, 500);
+    }
+
+    function cancelEdit() {
+        editForm.style.display = 'none';
+        hideEditMessage();
+    }
+
+    // ============================================
+    // ===== ОБРАБОТЧИКИ СОБЫТИЙ =====
+    // ============================================
+    // Авторизация
+    authSubmitBtn.addEventListener('click', function() {
+        if (isLoginMode) login();
+        else register();
+    });
+
+    authToggleLink.addEventListener('click', toggleAuthMode);
+
+    authCloseBtn.addEventListener('click', function() {
+        authOverlay.classList.remove('active');
+        hideAuthMessage();
+    });
+
+    authOverlay.addEventListener('click', function(e) {
+        if (e.target === authOverlay) {
+            authOverlay.classList.remove('active');
+            hideAuthMessage();
+        }
+    });
+
+    // Кнопки входа
+    navLoginBtn.addEventListener('click', openAuth);
+    heroAuthBtn.addEventListener('click', openAuth);
+
+    // Выход
+    navLogoutBtn.addEventListener('click', function() {
+        if (confirm('Вы уверены, что хотите выйти?')) logout();
+    });
+
+    profileLogoutBtn.addEventListener('click', function() {
+        if (confirm('Вы уверены, что хотите выйти?')) logout();
+    });
+
+    // Редактирование
+    profileEditBtn.addEventListener('click', openEditForm);
+    saveEditBtn.addEventListener('click', saveProfile);
+    cancelEditBtn.addEventListener('click', cancelEdit);
+
+    // Enter в формах
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && authOverlay.classList.contains('active')) {
+            authSubmitBtn.click();
+        }
+    });
+
+    // Навигация
+    document.getElementById('navHome').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!currentUser) {
+            mainContent.style.display = 'block';
+            profileSection.classList.remove('active');
+        }
+    });
+
+    document.getElementById('navProducts').addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('📦 Переход в каталог продукции');
+    });
+
+    document.getElementById('navAbout').addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('🏭 АИАЗАВОД — основан в 2020 году.\nМы производим интеллектуальных роботов с AI.');
+    });
+
+    document.getElementById('navContacts').addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('📞 Свяжитесь с нами:\n✉️ info@aiafactory.com\n📱 +7 (800) 555-35-35');
+    });
+
+    // ============================================
+    // ===== СОЗДАНИЕ ТЕСТОВОГО ПОЛЬЗОВАТЕЛЯ =====
+    // ============================================
+    if (!users['admin']) {
+        users['admin'] = {
+            id: generateId(),
+            username: 'admin',
+            email: 'admin@aiafactory.com',
+            password: '123456',
+            role: 'Администратор',
+            registeredAt: Date.now()
+        };
+        localStorage.setItem('aia_users', JSON.stringify(users));
+        console.log('✅ Тестовый пользователь: admin / 123456');
+    }
+
+    // ============================================
+    // ===== ЗАПУСК =====
+    // ============================================
+    updateUI();
+    console.log('🏭 АИАЗАВОД загружен!');
+    console.log('👥 Пользователи:', Object.keys(users));
+    console.log('🔑 Текущий:', currentUser || 'не авторизован');
+</script>
+</body>
+</html>
